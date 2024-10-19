@@ -71,7 +71,9 @@ Follow these steps to get the frontend up and running:
    npm run dev # or yarn dev
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000) to view the application.
+3. **Add .env file provided in email**
+
+4. Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ## Design Decisions
 
