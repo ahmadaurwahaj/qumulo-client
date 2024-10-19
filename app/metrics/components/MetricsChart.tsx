@@ -37,18 +37,18 @@ interface LineChartProps {
 }
 
 export function MetricsChart({ data, type }: LineChartProps) {
-  const sortedDataArray = data?.data || [];
+  const dataArray = data?.data || [];
 
-  if (!sortedDataArray.length) return null;
+  if (!dataArray.length) return null;
 
-  const lastData = sortedDataArray[sortedDataArray.length - 1];
+  const lastData = dataArray[dataArray.length - 1];
 
   return (
     <div className="relative size-full border-0">
       <div className="flex flex-col-reverse items-start gap-4 md:flex-row">
         <div className="w-full flex-col">
           <div className="flex justify-between pr-4">
-            <p className="hidden pb-1 pl-1 pt-6 text-lg md:block">{type}</p>
+            <p className="hidden pb-1 pl-1 pt-3 text-lg md:block">{type}</p>
             <div className="pt-11 text-xs">
               {format(new Date(lastData.date), "MMM dd, HH:mm")}
             </div>
@@ -58,7 +58,7 @@ export function MetricsChart({ data, type }: LineChartProps) {
             className="size-full max-h-[180px] min-h-[100px] min-w-[200px]"
           >
             <LineChart
-              data={sortedDataArray}
+              data={dataArray}
               margin={{ top: 6, bottom: 8, left: -12, right: 20 }}
             >
               <CartesianGrid
@@ -71,7 +71,7 @@ export function MetricsChart({ data, type }: LineChartProps) {
                 axisLine
                 interval={0}
                 tickFormatter={(value: string, index: number) =>
-                  formatXAxis(value, index, sortedDataArray.length)
+                  formatXAxis(value, index, dataArray.length)
                 }
               />
               <ReferenceLine
@@ -98,7 +98,7 @@ export function MetricsChart({ data, type }: LineChartProps) {
                   stroke={`var(--color-${key})`}
                   strokeWidth={2}
                   dot={(props) => (
-                    <CustomDot {...props} dataLength={sortedDataArray.length} />
+                    <CustomDot {...props} dataLength={dataArray.length} />
                   )}
                 />
               ))}
@@ -106,7 +106,7 @@ export function MetricsChart({ data, type }: LineChartProps) {
           </ChartContainer>
         </div>
         <div className="flex size-full h-full flex-col text-nowrap pb-4 pr-3 text-xl md:size-fit md:p-2 md:pb-0 md:pr-0 md:pt-[35px]">
-          <p className="pl-1 text-lg md:text-muted-foreground">{type}</p>
+          <p className="pl-1 text-lg md:text-[#858B90]">{type}</p>
           <div className="flex flex-row md:flex-col">
             <ChartCard text="Read" type={type} avg={data?.readAvg} />
             <ChartCard
@@ -140,8 +140,8 @@ const ChartCard = ({
   avg?: number;
   className?: string;
 }) => (
-  <div className="w-full border border-secondary-border bg-secondary-background px-3 py-2 md:w-[200px]">
-    <p className="text-base text-secondary-muted">{text}</p>
+  <div className="w-full border border-secondary-border bg-[#222C364D] px-3 py-2 md:w-[200px]">
+    <p className="text-base text-[#A6AAAE]">{text}</p>
     <p
       className={cn(
         `text-lg`,

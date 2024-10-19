@@ -34,7 +34,7 @@ export default function Sidebar() {
       <div className="flex items-center pr-3 flex-col gap-2">
         <div className="flex">
           <Logo />
-          <h2 className="font-light text-heading text-white">[Cluster name]</h2>
+          <h2 className="font-light text-heading">[Cluster name]</h2>
         </div>
         <hr className="my-0 h-0.5 border-t-0 bg-neutral-100 dark:bg-[#2D3E4E] w-full" />
       </div>
