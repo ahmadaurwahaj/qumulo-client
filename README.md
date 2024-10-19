@@ -12,7 +12,6 @@ This repository contains the frontend implementation for the Qumulo Cluster Mana
 - [Design Decisions](#design-decisions)
 - [Code Quality](#code-quality)
 - [Screenshots](#screenshots)
-- [How to Run Locally](#how-to-run-locally)
 - [Conclusion](#conclusion)
 
 ## Overview
