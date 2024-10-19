@@ -18,7 +18,10 @@ export function MetricsChartSkeleton() {
             <Skeleton className="mt-6 h-5 w-24" />
             <Skeleton className="h-4 w-20 pt-11" />
           </div>
-          <Skeleton className="mt-4 size-full max-h-[180px] min-h-[100px] min-w-[200px] rounded-md bg-slate-800" />
+          <Skeleton
+            data-testid="skeleton"
+            className="mt-4 size-full max-h-[180px] min-h-[100px] min-w-[200px] rounded-md bg-slate-800"
+          />
         </div>
 
         {/* Card Section */}
