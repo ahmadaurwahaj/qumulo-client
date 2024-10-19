@@ -75,6 +75,11 @@ Follow these steps to get the frontend up and running:
 
 4. Open [http://localhost:3000](http://localhost:3000) to view the application.
 
+5. **For Testing application:**
+   ```bash
+   npm run test
+   ```
+
 ## Design Decisions
 
 ### React Query for Data Fetching
@@ -113,17 +118,8 @@ Comprehensive states are implemented for **loading**, **error**, and **no-data**
 
 ## Screenshots
 
-Include screenshots of your application showcasing:
-
 - **Performance Metrics Dashboard**: ![Performance Matrics](image.png)
 - **Snapshot Policy Form**: ![Edit Policy](image-1.png)
-
-## How to Run Locally
-
-1. **Clone the Repository**: Clone this frontend repository.
-2. **Install Dependencies**: Run `npm install` or `yarn install` to install all required dependencies.
-3. **Start the Development Server**: Use `npm run dev` or `yarn dev` to start the development server.
-4. Open [http://localhost:3000](http://localhost:3000) to interact with the application.
 
 ## Conclusion
 
