@@ -16,7 +16,7 @@ const NavigationItem = ({ href, navText, selected }: NavigationItemProps) => {
       <Link
         href={href}
         className={cn("flex items-center px-2 py-0.5 text-sm", {
-          "bg-[#13181E] border-r-4 border-[#00A3CA] text-white": selected,
+          "bg-grey-active border-r-4 border-[#00A3CA] text-white": selected,
         })}
       >
         <span className={cn("h-1 w-1 rounded-full mr-2 bg-white")}></span>
@@ -30,7 +30,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className=" sticky top-0 w-50 pl-3 pt-4.5 bg-[#242C35] h-screen">
+    <div className=" sticky top-0 w-50 pl-3 pt-4.5 bg-grey-primary h-screen border-r-[#283038] border-r">
       <div className="flex items-center pr-3 flex-col gap-2">
         <div className="flex">
           <Logo />

@@ -16,6 +16,11 @@ const config: Config = {
         form: "#C7CACC",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        grey: {
+          primary: "#242C35",
+          active: "#13181E",
+          input: "#424B5380",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

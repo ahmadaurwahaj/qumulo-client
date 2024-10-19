@@ -42,7 +42,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex bg-[#13181E] 2xl:min-w-[1536px]">
+            <div className="flex bg-grey-active 2xl:min-w-[1536px]">
               <Sidebar />
               {children}
             </div>

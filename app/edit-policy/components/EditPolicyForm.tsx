@@ -114,7 +114,7 @@ export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
       <label htmlFor="schedule" className="text-lg">
         Run Policy on the Following Schedule
       </label>
-      <div className="mt-2 border-t border-secondary-border bg-[#242C35] p-2 text-lg shadow-lg md:p-4 lg:px-6 lg:py-9">
+      <div className="mt-2 border-t border-secondary-border bg-grey-primary p-2 text-lg shadow-lg md:p-4 lg:px-6 lg:py-9">
         <ScheduleTypeSelector control={control} />
         <TimeZoneSection />
         <TimeInput control={control} errors={errors} />
@@ -203,7 +203,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               {...field}
               id={id.toString()} // Ensure id is a string
               className={cn(
-                "bg-[#424B5380] border-border-muted py-1.5 px-2 text-lg h-9",
+                "bg-grey-input border-border-muted py-1.5 px-2 text-lg h-9",
                 {
                   "pl-12": icon,
                 },
