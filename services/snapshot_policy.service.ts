@@ -1,10 +1,14 @@
-import { SuccessMessageResponse } from "@/types/common.types";
-import { portalApi } from "@/utils/http.utils";
-import { toast } from "@/hooks/useToast.hook";
-import { MessageErrorResponse } from "@/types/common.types";
-import { AxiosError, AxiosRequestConfig } from "axios";
-import { schemaParse } from "@/utils/common.utils";
+import { AxiosError } from "axios";
 import { z } from "zod";
+
+import { toast } from "@/hooks/useToast.hook";
+import { schemaParse } from "@/utils/common.utils";
+import { portalApi } from "@/utils/http.utils";
+
+import {
+  MessageErrorResponse,
+  SuccessMessageResponse,
+} from "@/types/common.types";
 
 export const SnapshotPolicySchema = z.object({
   id: z.string().optional(),
@@ -49,7 +53,6 @@ export type SnapshotFetchParams = {
 
 export const getSnapShotById = async (
   params: SnapshotFetchParams,
-  config: AxiosRequestConfig,
 ): Promise<SnapshotPolicyResponse> => {
   try {
     const response = await portalApi.get(`/snapshot-policies/get/${params.id}`);

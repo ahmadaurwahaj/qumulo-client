@@ -1,9 +1,10 @@
 import { AxiosError, AxiosRequestConfig } from "axios";
 import { z } from "zod";
-import { toast } from "@/hooks/useToast.hook";
 
-import { portalApi } from "@/utils/http.utils";
+import { toast } from "@/hooks/useToast.hook";
 import { schemaParse } from "@/utils/common.utils";
+import { portalApi } from "@/utils/http.utils";
+
 import { MessageErrorResponse } from "@/types/common.types";
 
 const dataSchema = z.object({
@@ -45,7 +46,7 @@ export const fetchIops = async (
       description: (error as AxiosError<MessageErrorResponse>).response?.data
         ?.message,
       variant: "destructive",
-    });    
+    });
     throw error;
   }
 };

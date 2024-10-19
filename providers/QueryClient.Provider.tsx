@@ -10,8 +10,8 @@ import { ParentReactNode } from "@/types/common.types";
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools/build/modern/production.js").then(
-    (d) => ({ default: d.ReactQueryDevtools })
-  )
+    (d) => ({ default: d.ReactQueryDevtools }),
+  ),
 );
 
 export const QueryClientProvider = ({ children }: ParentReactNode) => {

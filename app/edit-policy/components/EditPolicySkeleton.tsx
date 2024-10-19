@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { LayoutWrapper } from "@/components/Layout";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function EditPolicySkeleton() {
   return (
@@ -21,9 +21,9 @@ export default function EditPolicySkeleton() {
           <Skeleton className="h-10 w-1/3" />
         </div>
 
-        <Skeleton className="h-6 w-1/2 mb-5" />
+        <Skeleton className="mb-5 h-6 w-1/2" />
 
-        <div className="shadow-lg bg-[#242C35] p-8 border-t border-slate-600">
+        <div className="border-t border-slate-600 bg-slate-900 p-8 shadow-lg">
           <div className="mb-5 flex items-center space-x-11">
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-10 w-52" />
@@ -90,20 +90,20 @@ export default function EditPolicySkeleton() {
           </div>
         </div>
 
-        <Skeleton className="h-5 w-32 mt-5" />
-        <Skeleton className="h-4 w-full mt-2" />
+        <Skeleton className="mt-5 h-5 w-32" />
+        <Skeleton className="mt-2 h-4 w-full" />
 
-        <div className="flex items-center mt-2">
+        <div className="mt-2 flex items-center">
           <Skeleton className="size-4 rounded-md" />
           <Skeleton className="ml-3 h-4 w-32" />
         </div>
 
-        <div className="flex items-center mt-10">
+        <div className="mt-10 flex items-center">
           <Skeleton className="size-4 rounded-md" />
           <Skeleton className="ml-3 h-4 w-40" />
         </div>
 
-        <div className="flex justify-between w-60 mt-8 gap-4">
+        <div className="mt-8 flex w-60 justify-between gap-4">
           <Skeleton className="h-8 w-1/2" />
           <Skeleton className="h-8 w-1/2" />
         </div>

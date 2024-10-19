@@ -1,12 +1,13 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { UseQueryConfig } from "@/types/common.types";
 
 import {
   fetchIops,
-  fetchThroughput,
   fetchMetricsParams,
+  fetchThroughput,
   MetricsResponse,
 } from "@/services/metrics.service";
+
+import { UseQueryConfig } from "@/types/common.types";
 
 export const useIopsMetrics = (
   queryParams: fetchMetricsParams,

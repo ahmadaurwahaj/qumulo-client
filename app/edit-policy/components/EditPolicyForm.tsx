@@ -1,14 +1,12 @@
 "use client";
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useCallback } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  SnapshotPolicyResponse,
-  SnapshotPolicySchema,
-} from "@/services/snapshot_policy.service";
-import { useEditPolicyMutation } from "@/hooks";
+import { Control, Controller, useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,8 +14,42 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+
+import { useEditPolicyMutation } from "@/hooks";
 import { cn } from "@/lib/utils";
+import {
+  SnapshotPolicyResponse,
+  SnapshotPolicySchema,
+} from "@/services/snapshot_policy.service";
+
+type DeleteSnapshotObj = {
+  after?: number;
+  unit?: "day" | "week" | "month";
+};
+
+type ErrorMessage = {
+  message?: string;
+};
+
+type ControlType = Control<SnapshotPolicyResponse>;
+interface InputWithLabelProps {
+  control: ControlType;
+  errors: Partial<Record<keyof SnapshotPolicyResponse, ErrorMessage>>;
+  label: string;
+  id: keyof SnapshotPolicyResponse;
+  placeholder: string;
+  className?: string;
+  icon?: boolean;
+}
+
+interface DeleteEachSnapshotProps {
+  control: ControlType;
+  deleteEachSnapshot: "Never" | DeleteSnapshotObj;
+  handleDeleteEachSnapshotChange: (value: "Never" | DeleteSnapshotObj) => void;
+}
+
+type DaysType = Array<"Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun">;
+const days: DaysType = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
   data,
@@ -46,10 +78,13 @@ export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
 
   const deleteEachSnapshot = watch("deleteEachSnapshot");
 
-  const handleDeleteEachSnapshotChange = (value: any) => {
-    setValue("deleteEachSnapshot", value);
-    if (value === "Never") setValue("enableLockedSnapshots", false);
-  };
+  const handleDeleteEachSnapshotChange = useCallback(
+    (value: "Never" | DeleteSnapshotObj) => {
+      setValue("deleteEachSnapshot", value);
+      if (value === "Never") setValue("enableLockedSnapshots", false);
+    },
+    [setValue],
+  );
 
   const onSubmit = (formData: SnapshotPolicyResponse) => {
     const updatedFormData = {
@@ -60,7 +95,7 @@ export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="!text-form font-normal">
+    <form onSubmit={handleSubmit(onSubmit)} className="font-normal !text-form">
       <InputWithLabel
         control={control}
         errors={errors}
@@ -79,7 +114,7 @@ export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
       <label htmlFor="schedule" className="text-lg">
         Run Policy on the Following Schedule
       </label>
-      <div className="shadow-lg bg-secondary-background p-2 md:p-4 lg:py-9 lg:px-6 border-t border-secondary-border mt-2 text-lg">
+      <div className="mt-2 border-t border-secondary-border bg-secondary-background p-2 text-lg shadow-lg md:p-4 lg:px-6 lg:py-9">
         <ScheduleTypeSelector control={control} />
         <TimeZoneSection />
         <TimeInput control={control} errors={errors} />
@@ -88,7 +123,6 @@ export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
           control={control}
           deleteEachSnapshot={deleteEachSnapshot}
           handleDeleteEachSnapshotChange={handleDeleteEachSnapshotChange}
-          errors={errors}
         />
       </div>
 
@@ -107,11 +141,13 @@ export const EditForm: React.FC<{ data: SnapshotPolicyResponse }> = ({
   );
 };
 
-const ScheduleTypeSelector = ({ control }: { control: any }) => (
-  <div className="flex flex-col md:flex-row gap-2 md:gap-6 md:items-center md:w-fit">
+const ScheduleTypeSelector: React.FC<{
+  control: ControlType;
+}> = ({ control }) => (
+  <div className="flex flex-col gap-2 md:w-fit md:flex-row md:items-center md:gap-6">
     <label
       htmlFor="scheduleType"
-      className="md:text-right text-form md:text-nowrap leading-[25.7px] md:min-w-[244px]"
+      className="leading-[25.7px] text-form md:min-w-[244px] md:text-nowrap md:text-right"
     >
       Select Schedule Type
     </label>
@@ -120,7 +156,7 @@ const ScheduleTypeSelector = ({ control }: { control: any }) => (
       control={control}
       render={({ field }) => (
         <Select value={field.value} onValueChange={field.onChange}>
-          <SelectTrigger className="w-full md:min-w-[189px] max-h-9 bg-input-secondary border-border-muted px-2 py-1.5 text-lg font-normal">
+          <SelectTrigger className="max-h-9 w-full border-border-muted bg-input-secondary px-2 py-1.5 text-lg font-normal md:min-w-[189px]">
             <SelectValue placeholder="Schedule Type" />
           </SelectTrigger>
           <SelectContent>
@@ -132,25 +168,6 @@ const ScheduleTypeSelector = ({ control }: { control: any }) => (
     />
   </div>
 );
-
-type ErrorMessage = {
-  message?: string;
-};
-
-type DeleteSnapshotObj = {
-  after?: ErrorMessage;
-  unit?: ErrorMessage;
-};
-
-interface InputWithLabelProps {
-  control: any;
-  errors: Partial<Record<string, ErrorMessage>>;
-  label: string;
-  id: keyof SnapshotPolicyResponse;
-  placeholder: string;
-  className?: string;
-  icon?: boolean;
-}
 
 const InputWithLabel: React.FC<InputWithLabelProps> = ({
   control,
@@ -167,53 +184,62 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
     </label>
     <div className="relative w-full">
       {icon && (
-        <div className="absolute inset-y-0 left-0 flex items-center px-4 border border-border-muted bg-[#1a222c] rounded-l-md">
+        <div className="absolute inset-y-0 left-0 flex items-center rounded-l-md border border-border-muted bg-[#1a222c] px-4">
           /
         </div>
       )}
       <Controller
-        name={id as string}
+        name={id}
         control={control}
-        render={({ field }) => (
-          <Input
-            {...field}
-            id={id as string}
-            className={cn(
-              "bg-input border-border-muted py-1.5 px-2 text-lg h-9",
-              {
-                "pl-12": icon,
-              },
-            )}
-            placeholder={placeholder}
-          />
-        )}
+        render={({ field }) => {
+          // Convert value to a compatible type for the Input component
+          const inputValue =
+            typeof field.value === "string" || typeof field.value === "number"
+              ? field.value
+              : ""; // Default to an empty string if not compatible
+
+          return (
+            <Input
+              {...field}
+              id={id.toString()} // Ensure id is a string
+              className={cn(
+                "bg-input border-border-muted py-1.5 px-2 text-lg h-9",
+                {
+                  "pl-12": icon,
+                },
+              )}
+              placeholder={placeholder}
+              value={inputValue} // Ensure value is string or number
+            />
+          );
+        }}
       />
     </div>
     {errors[id] && (
-      <p className="text-red-500 mt-1 text-sm">{errors[id]?.message}</p>
+      <p className="mt-1 text-sm text-red-500">{errors[id]?.message}</p>
     )}
   </div>
 );
 
 const TimeZoneSection = () => (
-  <div className="flex flex-col md:flex-row gap-2 md:gap-6 mt-3 md:items-center">
-    <h2 className="md:text-right md:min-w-[244px]">Set to Time Zone</h2>
+  <div className="mt-3 flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
+    <h2 className="md:min-w-[244px] md:text-right">Set to Time Zone</h2>
     <div className="flex items-center gap-1">
       <h2>America/Los Angeles</h2>
-      <span className="ml-3 flex h-4 w-4 items-center justify-center rounded-full bg-[#0298FF] text-sm text-secondary-background font-medium">
+      <span className="ml-3 flex size-4 items-center justify-center rounded-full bg-[#0298FF] text-sm font-medium text-secondary-background">
         ?
       </span>
     </div>
   </div>
 );
 interface TimeInputProps {
-  control: any;
+  control: ControlType;
   errors: Partial<Record<string, { message?: string }>>;
 }
 
 const TimeInput: React.FC<TimeInputProps> = ({ control, errors }) => (
-  <div className="flex flex-col md:flex-row gap-2 md:gap-6 mt-5 md:mt-3 md:items-center">
-    <span className="md:text-right my-auto leading-[25.7px] md:min-w-[244px]">
+  <div className="mt-5 flex flex-col gap-2 md:mt-3 md:flex-row md:items-center md:gap-6">
+    <span className="my-auto leading-[25.7px] md:min-w-[244px] md:text-right">
       Take a Snapshot at
     </span>
     <div className="flex items-center">
@@ -225,7 +251,7 @@ const TimeInput: React.FC<TimeInputProps> = ({ control, errors }) => (
             {...field}
             type="number"
             placeholder="HH"
-            className="w-[46px] text-center bg-input-secondary border-border-muted h-9 appearance-none"
+            className="h-9 w-[46px] appearance-none border-border-muted bg-input-secondary text-center"
             min={0}
             max={23}
             onChange={(e) =>
@@ -243,7 +269,7 @@ const TimeInput: React.FC<TimeInputProps> = ({ control, errors }) => (
             {...field}
             type="number"
             placeholder="MM"
-            className="w-[46px] text-center bg-input-secondary border-border-muted h-9"
+            className="h-9 w-[46px] border-border-muted bg-input-secondary text-center"
             min={0}
             max={59}
             onChange={(e) =>
@@ -254,30 +280,25 @@ const TimeInput: React.FC<TimeInputProps> = ({ control, errors }) => (
       />
     </div>
     {errors.snapshotTime && (
-      <p className="text-red-500 mt-1">{errors.snapshotTime.message}</p>
+      <p className="mt-1 text-red-500">{errors.snapshotTime.message}</p>
     )}
   </div>
 );
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const DaysSelector = ({
-  control,
-  errors,
-}: {
-  control: any;
+const DaysSelector: React.FC<{
+  control: ControlType;
   errors: Partial<Record<string, ErrorMessage>>;
-}) => (
-  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 mt-5 md:mt-3">
-    <p className="md:text-right text-form leading-[25.7px] md:min-w-[244px]">
+}> = ({ control, errors }) => (
+  <div className="mt-5 flex flex-col gap-2 md:mt-3 md:flex-row md:items-center md:gap-6">
+    <p className="leading-[25.7px] text-form md:min-w-[244px] md:text-right">
       On the Following Day(s)
     </p>
-    <div className="flex flex-wrap col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-5">
+    <div className="col-span-1 flex flex-wrap md:col-span-2 lg:col-span-3 xl:col-span-5">
       <Controller
         name="days"
         control={control}
         render={({ field }) => (
-          <div className="grid grid-cols-1 sm:grid-cols-3 md:flex flex-wrap">
+          <div className="grid grid-cols-1 flex-wrap sm:grid-cols-3 md:flex">
             <CheckboxWithLabel
               checked={field.value?.includes("Every day")}
               onChange={(e) => field.onChange(e ? ["Every day"] : [])}
@@ -303,7 +324,7 @@ const DaysSelector = ({
         )}
       />
     </div>
-    {errors.days && <p className="text-red-500 mt-1">{errors.days.message}</p>}
+    {errors.days && <p className="mt-1 text-red-500">{errors.days.message}</p>}
   </div>
 );
 
@@ -312,34 +333,28 @@ const CheckboxWithLabel: React.FC<{
   onChange: (checked: boolean) => void;
   label: string;
 }> = ({ checked, onChange, label }) => (
-  <div className="flex items-center mr-6">
+  <div className="mr-6 flex items-center">
     <Checkbox checked={checked} onCheckedChange={onChange} />
-    <label className="ml-3 text-lg leading-[25.7px] capitalize">{label}</label>
+    <label className="ml-3 text-lg capitalize leading-[25.7px]">{label}</label>
   </div>
 );
 
-const DeleteEachSnapshot = ({
+const DeleteEachSnapshot: React.FC<DeleteEachSnapshotProps> = ({
   control,
   deleteEachSnapshot,
   handleDeleteEachSnapshotChange,
-  errors,
-}: {
-  control: any;
-  deleteEachSnapshot: any;
-  handleDeleteEachSnapshotChange: (value: any) => void;
-  errors: Partial<Record<string, ErrorMessage | DeleteSnapshotObj>>;
 }) => (
-  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 mt-5 md:mt-3">
-    <p className="md:text-right leading-[25.7px] md:min-w-[244px]">
+  <div className="mt-5 flex flex-col gap-2 md:mt-3 md:flex-row md:items-center md:gap-6">
+    <p className="leading-[25.7px] md:min-w-[244px] md:text-right">
       Delete Each Snapshot
     </p>
-    <div className="flex flex-wrap col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-5">
+    <div className="col-span-1 flex flex-wrap md:col-span-2 lg:col-span-3 xl:col-span-5">
       <Controller
         name="deleteEachSnapshot"
         control={control}
         render={({ field }) => (
           <>
-            <div className="flex items-center mr-6">
+            <div className="mr-6 flex items-center">
               <input
                 id="deleteEachSnapshot"
                 name="deleteEachSnapshot"
@@ -347,7 +362,7 @@ const DeleteEachSnapshot = ({
                 value="Never"
                 checked={field.value === "Never"}
                 onChange={() => handleDeleteEachSnapshotChange("Never")}
-                className="w-4 h-4"
+                className="size-4"
               />
               <label
                 htmlFor="deleteEachSnapshot"
@@ -357,7 +372,7 @@ const DeleteEachSnapshot = ({
               </label>
             </div>
 
-            <div className="flex items-center flex-wrap sm:flex-nowrap md:flex-wrap lg:flex-nowrap">
+            <div className="flex flex-wrap items-center sm:flex-nowrap md:flex-wrap lg:flex-nowrap">
               <input
                 id="auto-delete-radio"
                 type="radio"
@@ -365,7 +380,7 @@ const DeleteEachSnapshot = ({
                 onChange={() =>
                   handleDeleteEachSnapshotChange({ after: 7, unit: "day" })
                 }
-                className="w-4 h-4 "
+                className="size-4 "
               />
               <label
                 htmlFor="auto-delete-radio"
@@ -381,7 +396,7 @@ const DeleteEachSnapshot = ({
                     <Input
                       id="deleteEachSnapshot.after"
                       type="number"
-                      className="w-[41px] ml-3 bg-input-secondary border-border-muted h-9"
+                      className="ml-3 h-9 w-[41px] border-border-muted bg-input-secondary"
                       {...field}
                       disabled={deleteEachSnapshot === "Never"}
                       onChange={(e) =>
@@ -399,7 +414,7 @@ const DeleteEachSnapshot = ({
                       onValueChange={field.onChange}
                       disabled={deleteEachSnapshot === "Never"}
                     >
-                      <SelectTrigger className="w-[97px] ml-3 bg-input-secondary border-border-muted h-9">
+                      <SelectTrigger className="ml-3 h-9 w-[97px] border-border-muted bg-input-secondary">
                         <SelectValue placeholder="Unit" />
                       </SelectTrigger>
                       <SelectContent>
@@ -424,18 +439,18 @@ const SnapshotLocking = ({
   deleteEachSnapshot,
   errors,
 }: {
-  control: any;
-  deleteEachSnapshot: any;
+  control: ControlType;
+  deleteEachSnapshot: "Never" | DeleteSnapshotObj;
   errors: Partial<Record<string, ErrorMessage>>;
 }) => (
   <>
-    <h2 className="text-lg text-form mt-11">Snapshot Locking</h2>
-    <p className="text-base text-form/80 mt-1">
+    <h2 className="mt-11 text-lg text-form">Snapshot Locking</h2>
+    <p className="mt-1 text-base text-form/80">
       Locked snapshots cannot be deleted before the deletion schedule expires.
       For this feature to be available, snapshots must be set to automatically
       delete.
     </p>
-    <div className="flex items-center mt-1.5">
+    <div className="mt-1.5 flex items-center">
       <Controller
         name="enableLockedSnapshots"
         control={control}
@@ -457,7 +472,7 @@ const SnapshotLocking = ({
       </label>
     </div>
     {errors.enableLockedSnapshots && (
-      <p className="text-red-500 mt-1">
+      <p className="mt-1 text-red-500">
         {errors.enableLockedSnapshots.message}
       </p>
     )}
@@ -470,13 +485,13 @@ const EnablePolicy = ({
   isPending,
   handleCancel,
 }: {
-  control: any;
+  control: ControlType;
   errors: Partial<Record<string, ErrorMessage>>;
   isPending: boolean;
   handleCancel: () => void;
 }) => (
   <>
-    <div className="flex items-center mt-14">
+    <div className="mt-14 flex items-center">
       <Controller
         name="enablePolicy"
         control={control}
@@ -493,9 +508,9 @@ const EnablePolicy = ({
       </label>
     </div>
     {errors.enablePolicy && (
-      <p className="text-red-500 mt-1">{errors.enablePolicy.message}</p>
+      <p className="mt-1 text-red-500">{errors.enablePolicy.message}</p>
     )}
-    <div className="flex gap-2.5 my-7">
+    <div className="my-7 flex gap-2.5">
       <Button
         type="submit"
         className="w-[125px] shadow-custom-bottom"

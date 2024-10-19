@@ -9,18 +9,19 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        "custom-bottom": "0px -1px 0px 0px #00000033",
+      },
       colors: {
-        textColor: "#C7CACC",
-        bgColor: "#242C35",
+        form: "#C7CACC",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
+        },
+        blue: {
+          primary: "#0298FF",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -66,13 +67,13 @@ const config: Config = {
         heading: "var(--font-size-heading)",
       },
       spacing: {
-        4.5: "14px",
+        "4.5": "14px",
         50: "12.5rem",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 6px)",
       },
     },
   },

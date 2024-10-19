@@ -12,7 +12,7 @@ export const schemaParse =
       if (!isProd) {
         console.error(
           "Error parsing data with schema:",
-          JSON.stringify(error, null, 2)
+          JSON.stringify(error, null, 2),
         );
         throw error;
       }
