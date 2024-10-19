@@ -51,8 +51,8 @@ Follow these steps to get the frontend up and running:
 
 1. **Clone the Repository**:
    ```bash
-   git clone <repo-url>
-   cd <repo-folder>
+   git clone https://github.com/ahmadaurwahaj/qumulo-client
+   cd qumolo-client
    ```
 
 # Frontend Application
